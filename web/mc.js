@@ -2,7 +2,7 @@
 
 // paste your rosbridge codespace port url into the next line replacing the example one
 // be sure to edit the https:// and change it to wss://
-const ROSBRIDGE_ADDRESS = 'wss://fuzzy-cod-w6q94xgqv255gr-9090.app.github.dev/';
+const ROSBRIDGE_ADDRESS = 'wss://spindly-mausoleum-x6g94x97r3pp6v-9090.app.github.dev/';
 
 let last_state;
 let last_state_cycle;
@@ -257,6 +257,27 @@ class MC {
         console.log('exited?');
     }
 
+    async safinah() {
+        let embodied_text = "<es name='SpinHead_01' nonBlocking='true' />I just love the attention";
+        await this.waitUntilNotSpeaking();
+        console.log(`speaking "${embodied_text}"`);
+        let jiboAction = new ROSLIB.Topic({
+            ros : this.ros,
+            name : '/jibo',
+            messageType : '/jibo_msgs/JiboAction'
+        });
+
+        var speak = new ROSLIB.Message({
+            do_tts: true,
+            tts_text: embodied_text,
+        });
+
+        jiboAction.publish(speak);
+        console.log('spoke?');
+
+        await this.waitUntilSpeaking();
+        await this.waitUntilNotSpeaking();
+    }
 
     async speech(speech_key, embodied_text) {
         if ((!speech_key && !embodied_text) || (speech_key && embodied_text)) {
